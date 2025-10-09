@@ -1,4 +1,4 @@
-import 'package:demo/splashscreen.dart';
+import 'package:demo/painters.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splashscreen(),
+      home: DotPainter(),
     );
   }
 }
