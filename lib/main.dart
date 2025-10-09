@@ -1,4 +1,5 @@
 import 'package:demo/painters.dart';
+import 'package:demo/splashscreen.dart'; 
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DotPainter(),
+      home: const Splashscreen(), // Set Splashscreen as the home widget
     );
   }
 }
