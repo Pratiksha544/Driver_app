@@ -1,6 +1,5 @@
 import 'package:demo/homescreen.dart';
 import 'package:flutter/material.dart';
-import 'painters.dart';
 import 'splashscreenpage1.dart';
 import 'splashscreenpage2.dart';
 import 'splashscreenpage3.dart';
@@ -36,12 +35,12 @@ class _SplashscreenState extends State<Splashscreen> {
     Widget? child,
     double? width,
     double? height,
-    EdgeInsets? margin = const EdgeInsets.symmetric(horizontal: 40),
+    EdgeInsets? margin = const EdgeInsets.symmetric(horizontal: 60),
     double borderRadius = 5,
   }) {
     return Container(
-      width: width,
-      height: height,
+      width: width ?? 500, // Default to 500 if width is null
+      height: height ?? 70, // Default to 70 if height is null
       margin: margin,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -75,6 +74,7 @@ class _SplashscreenState extends State<Splashscreen> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildTab(bool selected) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -85,6 +85,7 @@ class _SplashscreenState extends State<Splashscreen> {
     );
   }
 
+  // ignore: unused_element
   Widget _buildCell() {
     return Container(
       height: 40,
@@ -152,20 +153,20 @@ class _SplashscreenState extends State<Splashscreen> {
               );
             },
             icon: const Icon(Icons.g_mobiledata, color: Colors.white, size: 40),
-            label: const Text('Continue with Google', style: TextStyle(color: Colors.red)),
+            label: const Text('Continue with Google', style: TextStyle(color: Colors.red, fontSize: 19)),
             style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              side: const BorderSide(color: Colors.red),
+              minimumSize: const Size(double.infinity, 60),
+              side: const BorderSide(color: Colors.red, width: 2),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           OutlinedButton(
             onPressed: () {},
-            child: const Text('Continue with Email + Password', style: TextStyle(color: Colors.blue)),
+            child: const Text('Continue with Email + Password', style: TextStyle(color: Colors.blue, fontSize: 19)),
             style: OutlinedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              side: const BorderSide(color: Colors.blue),
+              minimumSize: const Size(double.infinity, 60),
+              side: const BorderSide(color: Colors.blue, width: 2),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
@@ -180,10 +181,13 @@ class _SplashscreenState extends State<Splashscreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Container(color: Colors.blue),
-          CustomPaint(
-            painter: DotPainter(),
-            size: Size.infinite,
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/image.jpg'), // Ensure this matches your asset
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           PageView(
             controller: _controller,

@@ -1,4 +1,4 @@
-import 'package:demo/painters.dart';
+
 import 'package:demo/splashscreen.dart'; 
 import 'package:flutter/material.dart';
 

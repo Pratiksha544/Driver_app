@@ -15,7 +15,7 @@ Widget buildPage2({
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       buildRoundedContainer(
-        height: 280,
+        height: 260,
         child: Column(
           children: [
             Row(
@@ -48,12 +48,13 @@ Widget buildPage2({
           'Capture proof of delivery\nvia signature, OTP & Photo',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 28,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
         ),
       ),
+      SizedBox(height: 15,)
     ],
   );
 }
