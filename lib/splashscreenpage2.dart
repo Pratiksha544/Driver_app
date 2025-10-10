@@ -22,10 +22,10 @@ Widget buildPage2({
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(20.0),
                   child: Text(
                     'Capture POD',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
@@ -37,7 +37,7 @@ Widget buildPage2({
             buildOptionRow('Capture customer signature'),
             buildOptionRow('Capture Photograph'),
             buildOptionRow('Delivery note'),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             buildBlueButton(),
           ],
         ),
@@ -45,7 +45,7 @@ Widget buildPage2({
       const Padding(
         padding: EdgeInsets.all(25.0),
         child: Text(
-          'Capture proof of delivery\nvia signature, OTP & Photo',
+          'Capture Proof of delivery\nvia sign, OTP & Photo',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,

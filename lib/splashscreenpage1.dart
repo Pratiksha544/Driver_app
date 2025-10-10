@@ -15,7 +15,7 @@ Widget buildPage1({
       Padding(
         padding: const EdgeInsets.only(right: 50.0),
         child: buildRoundedContainer(
-          height: 60,
+          height: 70,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -36,7 +36,7 @@ Widget buildPage1({
                     padding: EdgeInsets.only(bottom: 1.0),
                     child: Text(
                       'search by address and add\nstops to your routes',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontWeight: FontWeight.w300,fontSize: 12),
                       textAlign: TextAlign.start,                    
                     ),
                   ),
@@ -50,7 +50,7 @@ Widget buildPage1({
       Padding(
         padding: const EdgeInsets.only(left: 50.0),
         child: buildRoundedContainer(
-          height: 60,
+          height: 70,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -69,7 +69,7 @@ Widget buildPage1({
                   ),
                   Text(
                     'import your stops as a\nconvenient excel it as a photo',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.w300,fontSize: 12),
                   )
                 ],
               ),
@@ -81,7 +81,7 @@ Widget buildPage1({
       Padding(
         padding: const EdgeInsets.only(right: 40.0),
         child: buildRoundedContainer(
-          height: 60,
+          height: 70,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -100,7 +100,7 @@ Widget buildPage1({
                   ),
                   Text(
                     'upload your stops as an image\nor capture it as a photo',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.w300,fontSize: 12),
                   )
                 ],
               ),
@@ -112,7 +112,7 @@ Widget buildPage1({
       Padding(
         padding: const EdgeInsets.only(left: 50.0),
         child: buildRoundedContainer(
-          height: 60,
+          height: 70,
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -134,7 +134,7 @@ Widget buildPage1({
                   ),
                   Text(
                     'Add stops by simply scanning\nthe barcode of your stops',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontWeight: FontWeight.w300,fontSize: 12),
                     textAlign: TextAlign.start,
                   )
                 ],

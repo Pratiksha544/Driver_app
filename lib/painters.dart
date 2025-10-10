@@ -30,7 +30,7 @@ class DashedContainer extends StatelessWidget {
     this.color = Colors.blue,
     this.strokeWidth = 1.0,
     this.dashArray = const [3, 3],
-    this.radius = const Radius.circular(5),
+    this.radius = const Radius.circular(5), required dashedBorder,
   });
 
   @override

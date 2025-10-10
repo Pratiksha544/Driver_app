@@ -52,10 +52,10 @@ class _SplashscreenState extends State<Splashscreen> {
 
   Widget _buildOptionRow(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
         children: [
-          Expanded(child: Text(text)),
+          Expanded(child: Text(text,style: TextStyle(fontSize: 13),)),
           const Icon(Icons.check, color: Colors.green),
         ],
       ),
@@ -67,10 +67,10 @@ class _SplashscreenState extends State<Splashscreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: const Color.fromARGB(255, 36, 110, 221),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: const Center(child: Text('Mark stop as done', style: TextStyle(color: Colors.white))),
+      child: const Center(child: Text('Mark stop as done', style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white,))),
     );
   }
 
@@ -130,18 +130,26 @@ class _SplashscreenState extends State<Splashscreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(
-            padding: EdgeInsets.only(right: 150),
-            child: Text(
-              'Welcome to ZEO',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            padding: EdgeInsets.only(right: 190),
+            child: Row(
+              children: [
+                Text(
+                  'Welcome to',
+                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  ' ZEO',
+                  style: TextStyle(color: Color.fromARGB(255, 20, 104, 230), fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 4),
           const Padding(
-            padding: EdgeInsets.only(left: 9, right: 150),
+            padding: EdgeInsets.only(left: 1, right: 140),
             child: Text(
               'Select an option to proceed...',
-              style: TextStyle(color: Colors.grey, fontSize: 14),
+              style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
           ),
           const SizedBox(height: 24),
