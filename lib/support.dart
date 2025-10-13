@@ -6,128 +6,131 @@ class HelpSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF1C2526),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Feel free to reach us all queries related product\nSubscription & Technical support',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.start,
-              ),
-              const SizedBox(height: 30),
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2A2F32),
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(child: _buildSupportButton('WhatsApp', AntDesign.whats_app_outline)),
-                        Container(
-                          width: 2,
-                          height: 140,
-                          color: Colors.grey,
-                        ),
-                        Expanded(child: _buildSupportButton('Call us', Icons.phone)),
-                      ],
-                    ),
-                    Container(
-                      height: 2,
-                      color: Colors.grey,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: _buildSupportButton('Chat with us', Icons.chat)),
-                        Container(
-                          width: 2,
-                          height: 140,
-                          color: Colors.grey,
-                        ),
-                        Expanded(child: _buildSupportButton('Write to us', Icons.email)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: const Text(
-                  'Let\'s earn with Zeo',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: const Text(
-                  'Refer & Earn Upto ₹1500 Per referral\nby referring your friends.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: const Text(
-                  'Share referral invite using',
+    return Scaffold(
+      appBar: AppBar(title: Text('History & Support',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 25),),backgroundColor: Color(0xFF1C2526),),
+      body: Container(
+        color: const Color(0xFF1C2526),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0,right: 16,bottom: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Feel free to reach us all queries related product\nSubscription & Technical support',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.start,
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildSocialButtonf(EvaIcons.facebook),
-                  Spacer(),
-                  _buildSocialButtont(AntDesign.twitter_outline),
-                  Spacer(),
-                  _buildSocialButtonl(EvaIcons.linkedin),
-                  Spacer(),
-                  _buildSocialButtonw(AntDesign.whats_app_outline),
-                  Spacer(),
-                  _buildShareButton(),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: const Text(
-                  'How it Works?',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2A2F32),
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  textAlign: TextAlign.center,
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: _buildSupportButton('WhatsApp', AntDesign.whats_app_outline)),
+                          Container(
+                            width: 2,
+                            height: 120,
+                            color: Colors.grey,
+                          ),
+                          Expanded(child: _buildSupportButton('Call us', Icons.phone)),
+                        ],
+                      ),
+                      Container(
+                        height: 2,
+                        color: Colors.grey,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: _buildSupportButton('Chat with us', Icons.chat)),
+                          Container(
+                            width: 2,
+                            height: 120,
+                            color: Colors.grey,
+                          ),
+                          Expanded(child: _buildSupportButton('Write to us', Icons.email)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 150),
-            ],
+                
+                const SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: const Text(
+                    'Let\'s earn with Zeo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: const Text(
+                    'Refer & Earn Upto ₹1500 Per referral\nby referring your friends.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: const Text(
+                    'Share referral invite using',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildSocialButtonf(EvaIcons.facebook),
+                    Spacer(),
+                    _buildSocialButtont(AntDesign.twitter_outline),
+                    Spacer(),
+                    _buildSocialButtonl(EvaIcons.linkedin),
+                    Spacer(),
+                    _buildSocialButtonw(AntDesign.whats_app_outline),
+                    Spacer(),
+                    _buildShareButton(),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: const Text(
+                    'How it Works?',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 150),
+              ],
+            ),
           ),
         ),
       ),

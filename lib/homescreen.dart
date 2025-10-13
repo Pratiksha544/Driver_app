@@ -48,16 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF1C2526),
-        title: Text(
-          _getTitle(_selectedIndex),
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
         actions: _selectedIndex == 0
             ? const [
+              SizedBox(width: 20,),
+               Text('History',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),textAlign: TextAlign.start,),Spacer(),
                 Icon(Icons.calendar_today, color: Colors.white),
                 SizedBox(width: 16),
               ]
             : null,
+            
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -85,20 +84,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  }
-
-  String _getTitle(int index) {
-    switch (index) {
-      case 0:
-        return 'History';
-      case 1:
-        return 'Help & Support';
-      case 2:
-        return 'On Ride';
-      case 3:
-        return 'My Profile';
-      default:
-        return 'History';
-    }
   }
 }

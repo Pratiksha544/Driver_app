@@ -64,24 +64,26 @@ class OnRideScreen extends StatelessWidget {
                   'Create your first route!',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: const Text(
-                  'Search by address and add your delivery/ pickup stops to create your first route',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
+                padding: const EdgeInsets.all(14.0),
+                child: Center(
+                  child: const Text(
+                    'Search by address and add your delivery/\npickup stops to create your first route',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               // Outlined button: Watch Help Videos
               Center(
                 child: OutlinedButton(
