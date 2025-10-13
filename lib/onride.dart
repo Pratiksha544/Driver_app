@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class OnRideScreen extends StatelessWidget {
   const OnRideScreen({super.key});
@@ -33,7 +34,7 @@ class OnRideScreen extends StatelessWidget {
                     Expanded(
                       child: TextField(
                         decoration: const InputDecoration(
-                          hintText: 'Search Route by name, stops and more...',
+                          hintText: 'Search by address',
                           hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
                           border: InputBorder.none,
                         ),
@@ -49,9 +50,11 @@ class OnRideScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildOptionButton('by Address',Icons.search),
-                  _buildOptionButton('On Map',Icons.location_city),
-                  _buildOptionButton('By Lat Long',Icons.location_on_outlined),
+                  _buildOptionButton(Icons.search,'by Address'),
+                  SizedBox(width: 10,),
+                  _buildOptionButton(Icons.location_on_outlined,'On Map'),
+                  SizedBox(width: 10,),
+                  _buildOptionButton(EvaIcons.globe,'By lat long'),
                 ],
               ),
               const SizedBox(height: 30),
@@ -95,22 +98,20 @@ class OnRideScreen extends StatelessWidget {
                   
                 ),
               ),
-              const SizedBox(height: 20),
-              // Placeholder for additional content
-              const SizedBox(height: 100), // Adjust height as needed
+              const SizedBox(height: 80), // Adjust height as needed
               // Three icons at the bottom left
               Padding(
-                padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only( bottom: 16.0),
                 child: Row(
                   children: [
                     // Placeholder for first custom icon
-                    const Icon(Icons.home, color: Colors.white, size: 30),
+                    const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
                     const SizedBox(width: 15),
                     // Placeholder for second custom icon
-                    const Icon(Icons.settings, color: Colors.white, size: 30),
+                    const Icon(Icons.photo, color: Colors.blue, size: 30),
                     const SizedBox(width: 15),
                     // Placeholder for third custom icon
-                    const Icon(Icons.person, color: Colors.white, size: 30),
+                    const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
                   ],
                 ),
               ),
@@ -121,25 +122,24 @@ class OnRideScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionButton(String text, IconData icon) {
+  Widget _buildOptionButton(IconData icon,String text) {
     return Expanded(
       child: OutlinedButton(
         onPressed: () {},
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Colors.grey),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          side:  BorderSide(color: Colors.grey),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          padding:  EdgeInsets.symmetric(vertical: 10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Placeholder for optional leading icon (replace with your icon)
-            const SizedBox.shrink(), // Default empty space, replace with Icon if needed
+            Icon(icon, color: Colors.white, size: 18),   // Default empty space, replace with Icon if needed
             const SizedBox(width: 5), // Space between icon and text
             Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
           ],
         ),

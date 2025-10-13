@@ -34,18 +34,18 @@ class HistoryScreen extends StatelessWidget {
                     backgroundColor: const Color(0xFF1C2526),
                     side: const BorderSide(color: Colors.blue),
                     minimumSize: const Size(230, 40),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   child: const Text('+ Add New Route', style: TextStyle(color: Colors.blue)),
                 ),
                 const SizedBox(width: 10),
                 Container(
-                  height: 35,
+                  height: 40,
                   width: 130,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Row(
                     children: [

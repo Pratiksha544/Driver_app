@@ -22,7 +22,7 @@ class HelpSupportScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF2A2F32),
@@ -37,7 +37,7 @@ class HelpSupportScreen extends StatelessWidget {
                         Expanded(child: _buildSupportButton('WhatsApp', AntDesign.whats_app_outline)),
                         Container(
                           width: 2,
-                          height: 120,
+                          height: 140,
                           color: Colors.grey,
                         ),
                         Expanded(child: _buildSupportButton('Call us', Icons.phone)),
@@ -52,7 +52,7 @@ class HelpSupportScreen extends StatelessWidget {
                         Expanded(child: _buildSupportButton('Chat with us', Icons.chat)),
                         Container(
                           width: 2,
-                          height: 120,
+                          height: 140,
                           color: Colors.grey,
                         ),
                         Expanded(child: _buildSupportButton('Write to us', Icons.email)),
@@ -61,7 +61,8 @@ class HelpSupportScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 70),
+              
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.only(left: 4.0),
                 child: const Text(
@@ -80,7 +81,7 @@ class HelpSupportScreen extends StatelessWidget {
                   'Refer & Earn Upto ₹1500 Per referral\nby referring your friends.',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.start,
@@ -103,13 +104,13 @@ class HelpSupportScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildSocialButtonf(EvaIcons.facebook),
-                  const SizedBox(width: 10),
+                  Spacer(),
                   _buildSocialButtont(AntDesign.twitter_outline),
-                  const SizedBox(width: 10),
+                  Spacer(),
                   _buildSocialButtonl(EvaIcons.linkedin),
-                  const SizedBox(width: 10),
+                  Spacer(),
                   _buildSocialButtonw(AntDesign.whats_app_outline),
-                  const SizedBox(width: 10),
+                  Spacer(),
                   _buildShareButton(),
                 ],
               ),
