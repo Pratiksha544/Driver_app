@@ -62,7 +62,7 @@ class MyProfileScreen extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4, bottom: 4.0),
-                                  child: Text("Introducing buffer time- Now you can add..."),
+                                  child: Text("Introducing buffer time- Now you can add...",style: TextStyle(color: const Color.fromARGB(255, 116, 183, 238)),),
                                 )
                               ],
                             ),
@@ -124,12 +124,12 @@ class MyProfileScreen extends StatelessWidget {
                                     padding: const EdgeInsets.all(8.0),
                                     child: CircleAvatar(child: Icon(Icons.upgrade, color: Colors.white,), backgroundColor: Colors.orange,),
                                   ),
-                                  const Text('Upgrade to PREMIUM', style: TextStyle(color: Colors.white)),
+                                  const Text('Upgrade to PREMIUM', style: TextStyle(fontSize: 16,color: Colors.white)),
                                 ],
                               ),
                               TextButton(
                                 onPressed: () {},
-                                child: const Text('Manage', style: TextStyle(color: Colors.white)),
+                                child: const Text('Manage', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blue)),
                               ),
                             ],
                           ),
@@ -139,7 +139,7 @@ class MyProfileScreen extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
                         color: Colors.black,),
-                        padding: const EdgeInsets.all(26.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: GridView.count(
                           crossAxisCount: 3,
                           shrinkWrap: true,
