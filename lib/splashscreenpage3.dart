@@ -117,6 +117,7 @@ Widget buildPage3({
                   child: Table(
                     border: TableBorder.all(
                       borderRadius: BorderRadius.circular(10),
+                      // ignore: deprecated_member_use
                       color: Colors.black.withOpacity(0.4)),
                     children: [
                       TableRow(

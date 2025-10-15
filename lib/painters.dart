@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class DotPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    // ignore: deprecated_member_use
     final paint = Paint()..color = Colors.white.withOpacity(0.1);
     for (double x = 0; x < size.width; x += 20) {
       for (double y = 0; y < size.height; y += 20) {

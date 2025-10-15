@@ -21,7 +21,7 @@ Widget buildPage1({
             children: [
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: CircleAvatar(child: Icon(Icons.search, color: Colors.blue),minRadius: 18,),
+                child: CircleAvatar(minRadius: 18,child: Icon(Icons.search, color: Colors.blue),),
               ),
               Column(
                 children: [
@@ -56,7 +56,7 @@ Widget buildPage1({
             children: [
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: CircleAvatar(child: Icon(Icons.insert_drive_file, color: Colors.blue),minRadius: 18,),
+                child: CircleAvatar(minRadius: 18,child: Icon(Icons.insert_drive_file, color: Colors.blue),),
               ),
               Column(
                 children: [
@@ -87,7 +87,7 @@ Widget buildPage1({
             children: [
               Padding(
                 padding: EdgeInsets.all(10.0),
-                child: CircleAvatar(child: Icon(Icons.image, color: Colors.blue),minRadius: 18,),
+                child: CircleAvatar(minRadius: 18,child: Icon(Icons.image, color: Colors.blue),),
               ),
               Column(
                 children: [
@@ -119,8 +119,8 @@ Widget buildPage1({
               Padding(
                 padding: EdgeInsets.all(10.0),
                 child: CircleAvatar(
-                  child: Icon(Icons.qr_code, color: Colors.blue),
                   minRadius: 18,
+                  child: Icon(Icons.qr_code, color: Colors.blue),
                 ),
               ),
               Column(

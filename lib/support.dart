@@ -157,7 +157,7 @@ class HelpSupportScreen extends StatelessWidget {
   }
 
   Widget _buildSocialButtonf(IconData icon) {
-    return CircleAvatar(child: Icon(icon, color: Colors.white, size: 30), backgroundColor: Colors.blue, maxRadius: 25,);
+    return CircleAvatar(backgroundColor: Colors.blue, maxRadius: 25,child: Icon(icon, color: Colors.white, size: 30),);
   }
 
   Widget _buildSocialButtont(IconData icon) {
@@ -171,7 +171,7 @@ class HelpSupportScreen extends StatelessWidget {
   }
 
   Widget _buildSocialButtonw(IconData icon) {
-    return CircleAvatar(child: Icon(icon, color: Colors.white, size: 25), backgroundColor: Colors.green, maxRadius: 25,);
+    return CircleAvatar(backgroundColor: Colors.green, maxRadius: 25,child: Icon(icon, color: Colors.white, size: 25),);
   }
 
   Widget _buildShareButton() {

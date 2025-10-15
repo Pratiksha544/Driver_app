@@ -239,93 +239,110 @@ class SearchResultsPage extends StatelessWidget {
               const SizedBox(height: 20),
               // Column with three options
               Container(
-                height: 100,
-                width: 400,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircleAvatar(child: Icon(Icons.sim_card_alert_sharp, color: Colors.blue)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Import Excel', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                          Text('Import your stops as convenient excel\nor csv sheet',
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+  height: 100,
+  width: 400,
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('images/sim.png'), // Replace with your image path
+      fit: BoxFit.cover, // Ensures the image covers the container
+    ),
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
+  ),
+  child: Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircleAvatar(child: Icon(Icons.sim_card_alert, color: Colors.blue)),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Import excel', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Import your stops as a convenient\nexcel or csv sheet',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+          ],
+        ),
+      )
+    ],
+  ),
+),
               const SizedBox(height: 20),
               // Column with three options
               Container(
-                height: 100,
-                width: 400,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircleAvatar(child: Icon(Icons.image, color: Colors.blue)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Image upload', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                          Text('Upload your stops as an image or\ncapture it as a photo',
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+  height: 100,
+  width: 400,
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('images/pic.png'), // Replace with your image path
+      fit: BoxFit.cover, // Ensures the image covers the container
+    ),
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
+  ),
+  child: Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircleAvatar(child: Icon(Icons.image, color: Colors.blue)),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Image upload', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Upload your stops as an image or\ncapture it as a photo',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+          ],
+        ),
+      )
+    ],
+  ),
+),
               const SizedBox(height: 20),
               // Column with three options
               Container(
-                height: 100,
-                width: 400,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
+  height: 100,
+  width: 400,
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('images/barcode.png'), // Replace with your image path
+      fit: BoxFit.cover, // Ensures the image covers the container
+    ),
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.circular(10), // Adds curve with a 10-pixel radius
+  ),
+  child: Stack(
+    children: [
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CircleAvatar(child: Icon(Icons.barcode_reader, color: Colors.blue)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Scan Barcode', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text('Add stops by simple scanning the\nbarcode of your stops',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircleAvatar(child: Icon(Icons.barcode_reader, color: Colors.blue)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Scan Barcode', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                          Text('Add stops by simple scanning the\nbarcode of your stops',
-                            style: TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              ],
+            ),
+          )
+        ],
+      ),
+      
+    ],
+  ),
+),
               const SizedBox(height: 60,),
               Center(child: Text('Want to learn more...watch our help video', style: TextStyle(fontSize: 16, color: Colors.grey),)),
               SizedBox(height: 10,),

@@ -1,5 +1,7 @@
-import 'package:demo/homescreen.dart';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'splashscreenpage1.dart';
 import 'splashscreenpage2.dart';
 import 'splashscreenpage3.dart';
@@ -39,8 +41,8 @@ class _SplashscreenState extends State<Splashscreen> {
     double borderRadius = 5,
   }) {
     return Container(
-      width: width ?? 500, // Default to 500 if width is null
-      height: height ?? 70, // Default to 70 if height is null
+      width: width ?? 500,
+      height: height ?? 70,
       margin: margin,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -55,7 +57,7 @@ class _SplashscreenState extends State<Splashscreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
         children: [
-          Expanded(child: Text(text,style: TextStyle(fontSize: 13),)),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
           const Icon(Icons.check, color: Colors.green),
         ],
       ),
@@ -70,32 +72,7 @@ class _SplashscreenState extends State<Splashscreen> {
         color: const Color.fromARGB(255, 36, 110, 221),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: const Center(child: Text('Mark stop as done', style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white,))),
-    );
-  }
-
-  // ignore: unused_element
-  Widget _buildTab(bool selected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: selected ? Colors.blue : Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-  }
-
-  // ignore: unused_element
-  Widget _buildCell() {
-    return Container(
-      height: 40,
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          const SizedBox(width: 20), // Placeholder for icon
-          const Expanded(child: SizedBox()), // Placeholder for text
-        ],
-      ),
+      child: const Center(child: Text('Mark stop as done', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white))),
     );
   }
 
@@ -117,6 +94,71 @@ class _SplashscreenState extends State<Splashscreen> {
         }),
       ),
     );
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      // ignore: avoid_print
+      print('Starting Google Sign-In...');
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // ignore: avoid_print
+        print('Google Sign-In aborted by user');
+        return;
+      }
+
+      // ignore: avoid_print
+      print('Google user selected: ${googleUser.email}');
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // ignore: avoid_print
+      print('Access Token: ${googleAuth.accessToken}');
+      // ignore: avoid_print
+      print('ID Token: ${googleAuth.idToken}');
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+
+      // ignore: avoid_print
+      print('Firebase user: ${user?.email}, UID: ${user?.uid}, Is Email Verified: ${user?.emailVerified}');
+
+      if (user != null) {
+        await Future.delayed(const Duration(milliseconds: 500)); // Ensure auth state propagates
+        // ignore: avoid_print
+        print('Auth successful, navigation handled by AuthGate');
+      } else {
+        // ignore: avoid_print
+        print('No user after auth');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Authentication failed: No user found.')),
+          );
+        }
+      }
+    } on FirebaseAuthException catch (e, stackTrace) {
+      // ignore: avoid_print
+      print('Firebase Auth error: ${e.code} - ${e.message} - Stack: $stackTrace');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Auth error: ${e.message ?? e.code}')),
+        );
+      }
+    } catch (e, stackTrace) {
+      // ignore: avoid_print
+      print('General Sign-In error: $e - Stack: $stackTrace');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-In failed. Check console for details.')),
+        );
+      }
+    }
   }
 
   Widget _buildBottomContainer() {
@@ -154,12 +196,6 @@ class _SplashscreenState extends State<Splashscreen> {
           ),
           const SizedBox(height: 24),
           OutlinedButton.icon(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            },
             icon: const Icon(Icons.g_mobiledata, color: Colors.white, size: 40),
             label: const Text('Continue with Google', style: TextStyle(color: Colors.red, fontSize: 19)),
             style: ElevatedButton.styleFrom(
@@ -167,16 +203,17 @@ class _SplashscreenState extends State<Splashscreen> {
               side: const BorderSide(color: Colors.red, width: 2),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
+            onPressed: _signInWithGoogle,
           ),
           const SizedBox(height: 10),
           OutlinedButton(
-            onPressed: () {},
-            child: const Text('Continue with Email + Password', style: TextStyle(color: Colors.blue, fontSize: 19)),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 60),
               side: const BorderSide(color: Colors.blue, width: 2),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
+            onPressed: () {},
+            child: const Text('Continue with Email + Password', style: TextStyle(color: Colors.blue, fontSize: 19)),
           ),
         ],
       ),
@@ -192,7 +229,7 @@ class _SplashscreenState extends State<Splashscreen> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('images/image.jpg'), // Ensure this matches your asset
+                image: AssetImage('images/image.jpg'),
                 fit: BoxFit.cover,
               ),
             ),

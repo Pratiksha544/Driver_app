@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // Added for logout
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
@@ -26,44 +28,51 @@ class MyProfileScreen extends StatelessWidget {
                             'Hello!',
                             style: TextStyle(color: Colors.white, fontSize: 22),
                           ),
-                          SizedBox(width: 220,),
-                          CircleAvatar(child: Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(Icons.edit),
-                          )),
-                          SizedBox(width: 20,),
-                          CircleAvatar(child: Icon(Icons.notifications))                   
+                          SizedBox(width: 220),
+                          CircleAvatar(
+                            child: Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: Icon(Icons.edit),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          CircleAvatar(child: Icon(Icons.notifications)),
                         ],
                       ),
                       const Text(
                         'xyz@gmail.com',
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
-                      SizedBox(height: 15,),
+                      SizedBox(height: 15),
                       Container(
                         height: 60,
                         width: 450,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12,),
-                          color: Color.fromARGB(255, 23, 120, 199),
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color.fromARGB(255, 23, 120, 199),
                         ),
                         child: Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Icon(Icons.star, color: Colors.orange, size: 30,),
+                            const Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Icon(Icons.star, color: Colors.orange, size: 30),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text("What's new...", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                                const Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Text("What's new...",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold, color: Colors.white)),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, bottom: 4.0),
-                                  child: Text("Introducing buffer time- Now you can add...",style: TextStyle(color: const Color.fromARGB(255, 116, 183, 238)),),
-                                )
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 4, bottom: 4.0),
+                                  child: Text(
+                                      "Introducing buffer time- Now you can add...",
+                                      style: TextStyle(
+                                          color:  Color.fromARGB(255, 116, 183, 238))),
+                                ),
                               ],
                             ),
                           ],
@@ -87,20 +96,35 @@ class MyProfileScreen extends StatelessWidget {
                         children: const [
                           Column(
                             children: [
-                              Text('0', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 20,)),
-                              Text('Trips Completed', style: TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('0',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                      fontSize: 20)),
+                              Text('Trips Completed',
+                                  style: TextStyle(color: Colors.white, fontSize: 14)),
                             ],
                           ),
                           Column(
                             children: [
-                              Text('0 kms', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 20)),
-                              Text('Travel Reduced', style: TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('0 kms',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                      fontSize: 20)),
+                              Text('Travel Reduced',
+                                  style: TextStyle(color: Colors.white, fontSize: 14)),
                             ],
                           ),
                           Column(
                             children: [
-                              Text('₹0', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 20)),
-                              Text('Saved on expenses', style: TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('₹0',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                      fontSize: 20)),
+                              Text('Saved on expenses',
+                                  style: TextStyle(color: Colors.white, fontSize: 14)),
                             ],
                           ),
                         ],
@@ -120,16 +144,23 @@ class MyProfileScreen extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CircleAvatar(child: Icon(Icons.upgrade, color: Colors.white,), backgroundColor: Colors.orange,),
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                        backgroundColor: Colors.orange,
+                                        child: Icon(Icons.upgrade, color: Colors.white)),
                                   ),
-                                  const Text('Upgrade to PREMIUM', style: TextStyle(fontSize: 16,color: Colors.white)),
+                                  const Text('Upgrade to PREMIUM',
+                                      style: TextStyle(fontSize: 16, color: Colors.white)),
                                 ],
                               ),
                               TextButton(
                                 onPressed: () {},
-                                child: const Text('Manage', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blue)),
+                                child: const Text('Manage',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue)),
                               ),
                             ],
                           ),
@@ -137,8 +168,8 @@ class MyProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-                        color: Colors.black,),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15), color: Colors.black),
                         padding: const EdgeInsets.all(8.0),
                         child: GridView.count(
                           crossAxisCount: 3,
@@ -165,10 +196,21 @@ class MyProfileScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () {},
+                         onPressed: () async {
+                          try {
+                            await GoogleSignIn().disconnect(); // Disconnect Google account
+                            await FirebaseAuth.instance.signOut(); // Sign out of Firebase
+                            // Navigation handled by AuthGate
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Logout failed: $e')),
+                            );
+                          }
+                        },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -179,20 +221,23 @@ class MyProfileScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        
                       ),
-                      SizedBox(height: 20,),
-                      Center(child: Text('App version 27.6',style: TextStyle(color: Colors.blueGrey),)),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 20),
+                      Center(
+                          child: Text('App version 27.6',
+                              style: TextStyle(color: Colors.blueGrey))),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Terms & conditions',style: TextStyle(color: Colors.blue),),
-                          SizedBox(width: 20,),
-                          Text('Privacy Policy',style: TextStyle(color: Colors.blue),)
+                          const Text('Terms & conditions',
+                              style: TextStyle(color: Colors.blue)),
+                          const SizedBox(width: 20),
+                          const Text('Privacy Policy',
+                              style: TextStyle(color: Colors.blue)),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -218,7 +263,9 @@ class MyProfileScreen extends StatelessWidget {
           child: Icon(icon, color: Colors.white, size: 25),
         ),
         const SizedBox(height: 5),
-        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 12)),
+        Text(label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white, fontSize: 12)),
       ],
     );
   }
