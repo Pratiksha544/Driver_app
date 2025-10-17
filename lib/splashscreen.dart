@@ -98,25 +98,14 @@ class _SplashscreenState extends State<Splashscreen> {
 
   Future<void> _signInWithGoogle() async {
     try {
-      // ignore: avoid_print
-      print('Starting Google Sign-In...');
       final GoogleSignIn googleSignIn = GoogleSignIn();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        // ignore: avoid_print
-        print('Google Sign-In aborted by user');
         return;
       }
 
-      // ignore: avoid_print
-      print('Google user selected: ${googleUser.email}');
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      // ignore: avoid_print
-      print('Access Token: ${googleAuth.accessToken}');
-      // ignore: avoid_print
-      print('ID Token: ${googleAuth.idToken}');
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -126,41 +115,20 @@ class _SplashscreenState extends State<Splashscreen> {
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
 
-      // ignore: avoid_print
-      print('Firebase user: ${user?.email}, UID: ${user?.uid}, Is Email Verified: ${user?.emailVerified}');
-
       if (user != null) {
         await Future.delayed(const Duration(milliseconds: 500)); // Ensure auth state propagates
-        // ignore: avoid_print
-        print('Auth successful, navigation handled by AuthGate');
       } else {
-        // ignore: avoid_print
-        print('No user after auth');
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Authentication failed: No user found.')),
-          );
         }
       }
-    } on FirebaseAuthException catch (e, stackTrace) {
-      // ignore: avoid_print
-      print('Firebase Auth error: ${e.code} - ${e.message} - Stack: $stackTrace');
+    } on FirebaseAuthException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Auth error: ${e.message ?? e.code}')),
-        );
       }
-    } catch (e, stackTrace) {
-      // ignore: avoid_print
-      print('General Sign-In error: $e - Stack: $stackTrace');
+    } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-In failed. Check console for details.')),
-        );
       }
     }
   }
-
   Widget _buildBottomContainer() {
     return Container(
       decoration: const BoxDecoration(

@@ -1,84 +1,223 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // Added for logout
+import 'package:google_sign_in/google_sign_in.dart';
 
-class MyProfileScreen extends StatelessWidget {
-  const MyProfileScreen({super.key});
+class MyProfileScreen extends StatefulWidget {
+  final User? user; // Make it nullable
+  
+  const MyProfileScreen({super.key, this.user});
+
+  @override
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
+}
+
+class _MyProfileScreenState extends State<MyProfileScreen>
+    with AutomaticKeepAliveClientMixin {
+  
+  @override
+  bool get wantKeepAlive => true;
+
+  User? _currentUser;
+  String _displayName = 'User';
+  String _email = 'Loading...';
+  String _photoUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+    
+    // Listen to auth state changes
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (mounted) {
+        setState(() {
+          _currentUser = user;
+        });
+        if (user != null) {
+          _loadUserData();
+        }
+      }
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    // Use constructor parameter first, then fallback to Firebase
+    User? user = widget.user ?? FirebaseAuth.instance.currentUser;
+    
+    if (user != null && mounted) {
+      setState(() {
+        _currentUser = user;
+        _email = user.email ?? 'No email';
+        // Extract only the first name from displayName or email's local part
+        _displayName = user.displayName?.split(' ').firstWhere((part) => part.isNotEmpty, orElse: () => 'User') ??
+                      (user.email?.split('@')[0].split(' ').firstWhere((part) => part.isNotEmpty, orElse: () => 'User') ?? 'User');
+        _photoUrl = user.photoURL ?? '';
+      });
+    }
+  }
+
+  Future<void> _handleLogout() async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await GoogleSignIn().disconnect();
+      await FirebaseAuth.instance.signOut();
+
+      Navigator.of(context).pop();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Logged out successfully')),
+        );
+      }
+    } catch (e) {
+      Navigator.of(context).pop();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Logout failed: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    super.build(context);
+    
+    return Scaffold(      
       body: Container(
         color: const Color(0xFF1C2526),
         child: Column(
           children: [
+            // Header with user info
             Container(
-              height: 170,
-              width: 500,
               padding: const EdgeInsets.all(16.0),
               color: const Color(0xFF007BFF),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  // User profile picture, name, and email in a structured row
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      CircleAvatar(
+                        radius: 30, // Increased for visibility
+                        backgroundImage: _photoUrl.isNotEmpty
+                            ? NetworkImage(_photoUrl)
+                            : null,
+                        child: _photoUrl.isEmpty
+                            ? const Icon(Icons.person, size: 40, color: Colors.white)
+                            : null,
+                      ),
+                      const SizedBox(width: 20), // Increased spacing
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Hello!',
-                            style: TextStyle(color: Colors.white, fontSize: 22),
+                          Row(
+                            children: [
+                              const Text(
+                                'Hello, ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18, // Increased font size
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                _displayName,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18, // Increased font size
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis, // Prevent overflow errors
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 220),
-                          CircleAvatar(
-                            child: Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: Icon(Icons.edit),
+                          const SizedBox(height: 8), // Increased spacing
+                          // Make email scrollable horizontally if it exceeds 20 characters
+                          SizedBox(
+                            height: 20, // Fixed height to contain the scroll
+                            width: 200, // Set a reasonable width
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                _email,
+                                style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                          SizedBox(width: 20),
-                          CircleAvatar(child: Icon(Icons.notifications)),
                         ],
                       ),
-                      const Text(
-                        'xyz@gmail.com',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      Spacer(),
+                      Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                        radius: 18, // Adjusted size to ensure fit
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        child: IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.white, size: 18), // Adjusted size
+                          onPressed: _editProfile,
+                        ),
                       ),
-                      SizedBox(height: 15),
-                      Container(
-                        height: 60,
-                        width: 450,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color.fromARGB(255, 23, 120, 199),
-                        ),
-                        child: Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Icon(Icons.star, color: Colors.orange, size: 30),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: Text("What's new...",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold, color: Colors.white)),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 4, bottom: 4.0),
-                                  child: Text(
-                                      "Introducing buffer time- Now you can add...",
-                                      style: TextStyle(
-                                          color:  Color.fromARGB(255, 116, 183, 238))),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      const SizedBox(width: 10), // Adjusted spacing
+                      CircleAvatar(
+                        radius: 18, // Adjusted size to ensure fit
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        child: const Icon(Icons.notifications, color: Colors.white, size: 18), // Adjusted size
                       ),
                     ],
+                  ),
+                    ],
+                  ),
+                  const SizedBox(height: 20), // Increased spacing
+                  // Action icons row
+                 // Increased spacing
+                  // What's new card
+                  Container(
+                    height: 70, // Increased height
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15), // Slightly larger radius
+                      color: const Color.fromARGB(255, 23, 120, 199),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.orange, size: 30),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("What's new...",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 16)), // Increased font size
+                                Text(
+                                    "Introducing buffer time...",
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 116, 183, 238),
+                                        fontSize: 14), // Increased font size
+                                    overflow: TextOverflow.ellipsis),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -90,75 +229,48 @@ class MyProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
+                      // Stats row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Column(
-                            children: [
-                              Text('0',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontSize: 20)),
-                              Text('Trips Completed',
-                                  style: TextStyle(color: Colors.white, fontSize: 14)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text('0 kms',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontSize: 20)),
-                              Text('Travel Reduced',
-                                  style: TextStyle(color: Colors.white, fontSize: 14)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text('₹0',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontSize: 20)),
-                              Text('Saved on expenses',
-                                  style: TextStyle(color: Colors.white, fontSize: 14)),
-                            ],
-                          ),
+                        children: [
+                          _buildStatCard('0', 'Trips Completed'),
+                          _buildStatCard('0 kms', 'Travel Reduced'),
+                          _buildStatCard('₹0', 'Saved on expenses'),
                         ],
                       ),
                       const SizedBox(height: 20),
+                      // Single Premium Upgrade Card
                       Container(
-                        height: 60,
-                        width: 380,
+                        height: 65,
+                        width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.black45,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                children: const [
+                                  Padding(
+                                    padding: EdgeInsets.all(6.0),
                                     child: CircleAvatar(
-                                        backgroundColor: Colors.orange,
-                                        child: Icon(Icons.upgrade, color: Colors.white)),
+                                      backgroundColor: Colors.orange,
+                                      child: Icon(Icons.upgrade, color: Colors.white, size: 18),
+                                    ),
                                   ),
-                                  const Text('Upgrade to PREMIUM',
-                                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                                  Text('Upgrade to PREMIUM',
+                                      style: TextStyle(fontSize: 14, color: Colors.white)),
                                 ],
                               ),
                               TextButton(
                                 onPressed: () {},
                                 child: const Text('Manage',
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.blue)),
                               ),
@@ -166,78 +278,42 @@ class MyProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15), color: Colors.black),
-                        padding: const EdgeInsets.all(8.0),
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          children: [
-                            _buildGridItem(Icons.settings, 'Preferences'),
-                            _buildGridItem(Icons.book, 'Address Book'),
-                            _buildGridItem(Icons.receipt, 'Transactions'),
-                            _buildGridItem(Icons.monetization_on, 'Earn with Zeo'),
-                            _buildGridItem(Icons.track_changes, 'Tracking'),
-                            _buildGridItem(Icons.message, 'Messages'),
-                            _buildGridItem(Icons.download, 'Downloads'),
-                            _buildGridItem(Icons.account_circle, 'Account'),
-                            _buildGridItem(Icons.people, 'Connections'),
-                            _buildGridItem(Icons.star, 'Rate Us'),
-                            _buildGridItem(Icons.share, 'Share App'),
-                            _buildGridItem(Icons.description, 'Reports'),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
+                      // Grid items
+                      _buildGridItems(),
+                      const SizedBox(height: 15),
+                      // Logout button
                       Center(
-                        child: ElevatedButton(
-                         onPressed: () async {
-                          try {
-                            await GoogleSignIn().disconnect(); // Disconnect Google account
-                            await FirebaseAuth.instance.signOut(); // Sign out of Firebase
-                            // Navigation handled by AuthGate
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Logout failed: $e')),
-                            );
-                          }
-                        },
+                        child: ElevatedButton.icon(
+                          onPressed: _currentUser != null ? _handleLogout : null,
+                          icon: const Icon(Icons.logout, size: 18),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.logout, color: Colors.white),
-                              SizedBox(width: 8),
-                              Text('Logout', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
+                          label: const Text('Logout', style: TextStyle(fontSize: 14)),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Center(
+                      const SizedBox(height: 15),
+                      // Footer
+                      const Center(
                           child: Text('App version 27.6',
-                              style: TextStyle(color: Colors.blueGrey))),
+                              style: TextStyle(color: Colors.blueGrey, fontSize: 12))),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Terms & conditions',
-                              style: TextStyle(color: Colors.blue)),
-                          const SizedBox(width: 20),
-                          const Text('Privacy Policy',
-                              style: TextStyle(color: Colors.blue)),
+                          _buildFooterLink('Terms & conditions'),
+                          const SizedBox(width: 15),
+                          _buildFooterLink('Privacy Policy'),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),
@@ -249,24 +325,102 @@ class MyProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(IconData icon, String label) {
+  Widget _buildStatCard(String value, String label) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 45,
-          height: 45,
-          decoration: const BoxDecoration(
-            color: Color(0xFF007BFF),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Colors.white, size: 25),
-        ),
-        const SizedBox(height: 5),
+        Text(value,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                fontSize: 22)),
         Text(label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 12)),
+            style: const TextStyle(color: Colors.white, fontSize: 14)),
       ],
     );
+  }
+
+  Widget _buildGridItems() {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15), color: Colors.black),
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 8,
+        children: [
+          _buildGridItem(Icons.settings, 'Preferences'),
+          _buildGridItem(Icons.book, 'Address Book'),
+          _buildGridItem(Icons.receipt, 'Transactions'),
+          _buildGridItem(Icons.monetization_on, 'Earn with Zeo'),
+          _buildGridItem(Icons.track_changes, 'Tracking'),
+          _buildGridItem(Icons.message, 'Messages'),
+          _buildGridItem(Icons.download, 'Downloads'),
+          _buildGridItem(Icons.account_circle, 'Account'),
+          _buildGridItem(Icons.people, 'Connections'),
+          _buildGridItem(Icons.star, 'Rate Us'),
+          _buildGridItem(Icons.share, 'Share App'),
+          _buildGridItem(Icons.description, 'Reports'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridItem(IconData icon, String label) {
+    return InkWell(
+      onTap: () => _handleGridItemTap(label),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: const BoxDecoration(
+              color: Color(0xFF007BFF),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white, size: 20),
+          ),
+          const SizedBox(height: 6),
+          Text(label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooterLink(String text) {
+    return GestureDetector(
+      onTap: () => launchURL('https://yourwebsite.com/$text'),
+      child: Text(text, style: const TextStyle(color: Colors.blue, fontSize: 12)),
+    );
+  }
+
+  void _editProfile() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Profile'),
+        content: const Text('Profile editing functionality coming soon!'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleGridItemTap(String item) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$item tapped')),
+    );
+  }
+
+  void launchURL(String url) {
+    print('Launching: $url');
   }
 }
