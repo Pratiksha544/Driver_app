@@ -121,7 +121,7 @@ class _SplashscreenState extends State<Splashscreen> {
         if (mounted) {
         }
       }
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       if (mounted) {
       }
     } catch (e) {

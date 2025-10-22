@@ -101,11 +101,46 @@ class _HomeScreenState extends State<HomeScreen>
               )
             : null,
         actions: _selectedIndex == 0
-            ? [
-                const Icon(Icons.calendar_today, color: Colors.white),
-                const SizedBox(width: 16),
-              ]
-            : null,
+    ? [
+        IconButton(
+          icon: const Icon(Icons.calendar_today, color: Colors.white),
+          onPressed: () async {
+            DateTime _selectedDate = DateTime.now(); // Current date
+            final DateTime? picked = await showDatePicker(
+              context: context,
+              initialDate: _selectedDate, // Current date
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: Colors.blue, // header background
+                      onPrimary: Colors.white, // header text
+                      onSurface: Colors.black, // body text
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue, // buttons color
+                      ),
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+
+            if (picked != null) {
+              // Handle the selected date here
+              print('Selected date: $picked');
+              // You can pass this to HistoryScreen or filter trips by this date
+            }
+          },
+        ),
+        const SizedBox(width: 16),
+      ]
+    : null,
+
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

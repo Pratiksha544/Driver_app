@@ -44,5 +44,37 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+
+        <!-- For HTTP/HTTPS URLs (covers Facebook, Twitter, LinkedIn, WhatsApp wa.me, and Write to Us) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+
+        <!-- For phone calls (Call us) -->
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+
+        <!-- For SMS (Chat with us) -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="sms" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto" />
+        </intent>
+
+        <!-- Optional: For specific app visibility (helps with direct app launches) -->
+        <package android:name="com.whatsapp" /> <!-- WhatsApp -->
+        <package android:name="com.twitter.android" /> <!-- Twitter/X -->
+        <package android:name="com.linkedin.android" /> <!-- LinkedIn -->
+        <package android:name="com.facebook.katana" /> <!-- Facebook -->
     </queries>
 </manifest>

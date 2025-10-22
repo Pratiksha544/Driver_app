@@ -60,7 +60,7 @@ class FileService {
           return result;
         }
         debugPrint('Failed to pick file or open file picker at ${DateTime.now()}. Check emulator setup or use a device.');
-        if (context != null && context.mounted) {
+        if (context.mounted) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(

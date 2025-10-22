@@ -3,6 +3,15 @@ import 'package:demo/image_upload.dart';
 import 'package:demo/import.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+// ✅ Function to open YouTube link
+Future<void> _launchYouTube() async {
+  final Uri url = Uri.parse('https://www.youtube.com/'); // Change link if needed
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    throw Exception('Could not launch $url');
+  }
+}
 
 class OnRideScreen extends StatelessWidget {
   const OnRideScreen({super.key});
@@ -17,10 +26,7 @@ class OnRideScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 250,
-                color: const Color(0xFF1C2526),
-              ),
+              Container(height: 250, color: const Color(0xFF1C2526)),
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF2A2F32),
@@ -39,7 +45,8 @@ class OnRideScreen extends StatelessWidget {
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) =>
                                   const SearchResultsPage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              transitionsBuilder:
+                                  (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(0.0, -1.0);
                                 const end = Offset.zero;
                                 final tween = Tween(begin: begin, end: end);
@@ -49,21 +56,23 @@ class OnRideScreen extends StatelessWidget {
                                   child: child,
                                 );
                               },
-                              transitionDuration: const Duration(milliseconds: 300),
+                              transitionDuration:
+                                  const Duration(milliseconds: 300),
                             ),
                           );
                         },
-                        child: TextField(
+                        child: const TextField(
                           enabled: false,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Search by address',
-                            hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 14),
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                     ),
-                    const Icon(Icons.mic, color: Colors.grey, size: 20),
+                    const Icon(Icons.mic, color: Colors.blue, size: 20),
                   ],
                 ),
               ),
@@ -73,7 +82,8 @@ class OnRideScreen extends StatelessWidget {
                 children: [
                   _buildOptionButton(context, Icons.search, 'by Address'),
                   const SizedBox(width: 10),
-                  _buildOptionButton(context, Icons.location_on_outlined, 'On Map'),
+                  _buildOptionButton(
+                      context, Icons.location_on_outlined, 'On Map'),
                   const SizedBox(width: 10),
                   _buildOptionButton(context, EvaIcons.globe, 'By lat long'),
                 ],
@@ -108,19 +118,19 @@ class OnRideScreen extends StatelessWidget {
                 child: SizedBox(
                   width: 200,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: _launchYouTube, // ✅ Opens YouTube
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.blue, size: 18),
+                        Icon(Icons.video_call, color: Colors.blue, size: 18),
                         SizedBox(width: 5),
                         Text(
                           'watch help videos',
@@ -132,18 +142,55 @@ class OnRideScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 80),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
-                    SizedBox(width: 15),
-                    Icon(Icons.photo, color: Colors.blue, size: 30),
-                    SizedBox(width: 15),
-                    Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
-                  ],
-                ),
-              ),
+              Padding(
+  padding: const EdgeInsets.only(bottom: 16.0),
+  child: Row(
+    children: [
+      // ✅ SIM card icon — now clickable
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ImportPage()),
+          );
+        },
+        child: const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
+      ),
+      const SizedBox(width: 15),
+
+      // 🖼️ Photo icon — you can make it clickable too if you want
+      GestureDetector(
+        onTap: () {
+          // Example: Navigate to image upload page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
+          );
+        },
+        child: const Icon(Icons.photo, color: Colors.blue, size: 30),
+      ),
+      const SizedBox(width: 15),
+
+      // 🔳 QR Code icon — also can be made clickable
+      GestureDetector(
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
+          );
+          if (result != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Scanned: $result')),
+            );
+          }
+        },
+        child:
+            const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
+      ),
+    ],
+  ),
+),
+
             ],
           ),
         ),
@@ -155,13 +202,14 @@ class OnRideScreen extends StatelessWidget {
     return Expanded(
       child: OutlinedButton(
         onPressed: () {
-          if (text == 'by Address') {
+          if (text == 'by Address' || text == 'By lat long') {
             Navigator.push(
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const SearchResultsPage(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, -1.0);
                   const end = Offset.zero;
                   final tween = Tween(begin: begin, end: end);
@@ -178,7 +226,8 @@ class OnRideScreen extends StatelessWidget {
         },
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.grey),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.symmetric(vertical: 10),
         ),
         child: Row(
@@ -198,7 +247,6 @@ class OnRideScreen extends StatelessWidget {
   }
 }
 
-// Updated Search Results Page
 class SearchResultsPage extends StatelessWidget {
   const SearchResultsPage({super.key});
 
@@ -213,33 +261,33 @@ class SearchResultsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(height: 60),
-              // Search bar
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF2A2F32),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: const Row(
                   children: [
-                    const Icon(Icons.search, color: Colors.grey, size: 20),
-                    const SizedBox(width: 8),
-                    const Expanded(
+                    Icon(Icons.search, color: Colors.grey, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(
                       child: TextField(
                         autofocus: true,
                         decoration: InputDecoration(
                           hintText: 'Search by address',
-                          hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 14),
                           border: InputBorder.none,
                         ),
                       ),
                     ),
-                    const Icon(Icons.mic, color: Colors.grey, size: 20),
+                    Icon(Icons.mic, color: Colors.blue, size: 20),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              // Options row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -251,9 +299,8 @@ class SearchResultsPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              const SizedBox(height: 20),
 
-              // Import excel
+              // ✅ Import Excel
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -261,109 +308,36 @@ class SearchResultsPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const ImportPage()),
                   );
                 },
-                child: Container(
-                  height: 100,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage('images/sim.png'),
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircleAvatar(
-                          child: Icon(Icons.sim_card_alert, color: Colors.blue),
-                        ),
-                      ),
-                      const Padding(
-                        padding:
-                            EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Import excel',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Import your stops as a convenient\nexcel or csv sheet',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                child: _buildFeatureTile(
+                  icon: Icons.sim_card_alert,
+                  title: 'Import excel',
+                  description:
+                      'Import your stops as a convenient\nexcel or csv sheet',
+                  imagePath: 'images/sim.png',
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              // Image upload
+              // ✅ Image Upload
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const FilePickerUIPage()),
                   );
                 },
-                child: Container(
-                  height: 100,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage('images/pic.png'),
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircleAvatar(
-                          child: Icon(Icons.image, color: Colors.blue),
-                        ),
-                      ),
-                      const Padding(
-                        padding:
-                            EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Image upload',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Upload your stops as an image or\ncapture it as a photo',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                child: _buildFeatureTile(
+                  icon: Icons.image,
+                  title: 'Image upload',
+                  description:
+                      'Upload your stops as an image or\ncapture it as a photo',
+                  imagePath: 'images/pic.png',
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              // ✅ Scan Barcode (updated)
+              // ✅ Barcode Scanner
               GestureDetector(
                 onTap: () async {
                   final result = await Navigator.push(
@@ -377,54 +351,16 @@ class SearchResultsPage extends StatelessWidget {
                     );
                   }
                 },
-                child: Container(
-                  height: 100,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage('images/barcode.png'),
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child:
-                              Icon(Icons.qr_code_scanner, color: Colors.blue),
-                        ),
-                      ),
-                      const Padding(
-                        padding:
-                            EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Scan Barcode',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              'Add stops by simple scanning the\nbarcode of your stops',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                child: _buildFeatureTile(
+                  icon: Icons.qr_code_scanner,
+                  title: 'Scan Barcode',
+                  description:
+                      'Add stops by simply scanning the\nbarcode of your stops',
+                  imagePath: 'images/barcode.png',
                 ),
               ),
-
               const SizedBox(height: 60),
+
               const Center(
                 child: Text(
                   'Want to learn more...watch our help video',
@@ -436,14 +372,14 @@ class SearchResultsPage extends StatelessWidget {
                 child: SizedBox(
                   width: 200,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: _launchYouTube, // ✅ Opens YouTube
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -461,36 +397,72 @@ class SearchResultsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 120),
+
               Row(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 16.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
-                        SizedBox(width: 15),
-                        Icon(Icons.photo, color: Colors.blue, size: 30),
-                        SizedBox(width: 15),
-                        Icon(Icons.qr_code_scanner_sharp,
-                            color: Colors.blue, size: 30),
-                      ],
-                    ),
-                  ),
+                  Padding(
+  padding: const EdgeInsets.only(bottom: 16.0),
+  child: Row(
+    children: [
+      // ✅ SIM card icon — now clickable
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ImportPage()),
+          );
+        },
+        child: const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
+      ),
+      const SizedBox(width: 15),
+
+      // 🖼️ Photo icon — you can make it clickable too if you want
+      GestureDetector(
+        onTap: () {
+          // Example: Navigate to image upload page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
+          );
+        },
+        child: const Icon(Icons.photo, color: Colors.blue, size: 30),
+      ),
+      const SizedBox(width: 15),
+
+      // 🔳 QR Code icon — also can be made clickable
+      GestureDetector(
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
+          );
+          if (result != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Scanned: $result')),
+            );
+          }
+        },
+        child:
+            const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
+      ),
+    ],
+  ),
+),
+
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                          borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                     ),
                     child: const Text(
                       'Done adding stops',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   )
                 ],
@@ -508,7 +480,8 @@ class SearchResultsPage extends StatelessWidget {
         onPressed: () {},
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.grey),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.symmetric(vertical: 10),
         ),
         child: Row(
@@ -523,6 +496,56 @@ class SearchResultsPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureTile({
+    required IconData icon,
+    required String title,
+    required String description,
+    required String imagePath,
+  }) {
+    return Container(
+      height: 100,
+      width: 400,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+        ),
+        border: Border.all(color: Colors.white),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(icon, color: Colors.blue),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Text(
+                  description,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
