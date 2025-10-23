@@ -167,6 +167,9 @@ class HelpSupportScreen extends StatelessWidget {
                         color: Colors.blue,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                       decorationColor: Colors.blue,
+                       decorationThickness: 2
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -331,9 +334,7 @@ class HelpSupportScreen extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.share, color: Colors.white, size: 20),
-            SizedBox(width: 5),
+          children: const [                      
             Text(
               'Share',
               style: TextStyle(
@@ -342,6 +343,8 @@ class HelpSupportScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(width: 5),
+            Icon(Icons.share, color: Colors.white, size: 20),  
           ],
         ),
       ),

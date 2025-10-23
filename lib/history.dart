@@ -26,6 +26,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 children: [
                   Expanded(
                     child: const TextField(
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         icon: Icon(Icons.search, color: Colors.white38),
                         hintText: 'Search Route by name, stops and more...',
