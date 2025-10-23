@@ -13,8 +13,16 @@ Future<void> _launchYouTube() async {
   }
 }
 
-class OnRideScreen extends StatelessWidget {
+// ===================== OnRideScreen =====================
+class OnRideScreen extends StatefulWidget {
   const OnRideScreen({super.key});
+
+  @override
+  State<OnRideScreen> createState() => _OnRideScreenState();
+}
+
+class _OnRideScreenState extends State<OnRideScreen> {
+  String selectedOption = ''; // Track selected option for color
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +70,7 @@ class OnRideScreen extends StatelessWidget {
                           );
                         },
                         child: const TextField(
+                        style: TextStyle(color: Colors.white),
                           enabled: false,
                           decoration: InputDecoration(
                             hintText: 'Search by address',
@@ -82,8 +91,7 @@ class OnRideScreen extends StatelessWidget {
                 children: [
                   _buildOptionButton(context, Icons.search, 'by Address'),
                   const SizedBox(width: 10),
-                  _buildOptionButton(
-                      context, Icons.location_on_outlined, 'On Map'),
+                  _buildOptionButton(context, Icons.location_on_outlined, 'On Map'),
                   const SizedBox(width: 10),
                   _buildOptionButton(context, EvaIcons.globe, 'By lat long'),
                 ],
@@ -143,54 +151,46 @@ class OnRideScreen extends StatelessWidget {
               ),
               const SizedBox(height: 80),
               Padding(
-  padding: const EdgeInsets.only(bottom: 16.0),
-  child: Row(
-    children: [
-      // ✅ SIM card icon — now clickable
-      GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ImportPage()),
-          );
-        },
-        child: const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
-      ),
-      const SizedBox(width: 15),
-
-      // 🖼️ Photo icon — you can make it clickable too if you want
-      GestureDetector(
-        onTap: () {
-          // Example: Navigate to image upload page
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
-          );
-        },
-        child: const Icon(Icons.photo, color: Colors.blue, size: 30),
-      ),
-      const SizedBox(width: 15),
-
-      // 🔳 QR Code icon — also can be made clickable
-      GestureDetector(
-        onTap: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
-          );
-          if (result != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Scanned: $result')),
-            );
-          }
-        },
-        child:
-            const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
-      ),
-    ],
-  ),
-),
-
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ImportPage()),
+                        );
+                      },
+                      child: const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
+                    ),
+                    const SizedBox(width: 15),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
+                        );
+                      },
+                      child: const Icon(Icons.photo, color: Colors.blue, size: 30),
+                    ),
+                    const SizedBox(width: 15),
+                    GestureDetector(
+                      onTap: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
+                        );
+                        if (result != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Scanned: $result')),
+                          );
+                        }
+                      },
+                      child: const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -198,18 +198,35 @@ class OnRideScreen extends StatelessWidget {
     );
   }
 
+  // ===================== Option Button with Blue Highlight =====================
   Widget _buildOptionButton(BuildContext context, IconData icon, String text) {
+    final bool isSelected = selectedOption == text;
+
     return Expanded(
       child: OutlinedButton(
-        onPressed: () {
-          if (text == 'by Address' || text == 'By lat long') {
+        onPressed: () async {
+          setState(() {
+            selectedOption = text; // Mark as selected immediately
+          });
+
+          if (text == 'On Map') {
+            final Uri googleMapsUri = Uri.parse('https://www.google.com/maps/dir/?api=1');
+            try {
+              if (!await launchUrl(googleMapsUri, mode: LaunchMode.externalApplication)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not open Google Maps')),
+                );
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+            }
+          } else if (text == 'by Address' || text == 'By lat long') {
             Navigator.push(
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const SearchResultsPage(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, -1.0);
                   const end = Offset.zero;
                   final tween = Tween(begin: begin, end: end);
@@ -225,20 +242,20 @@ class OnRideScreen extends StatelessWidget {
           }
         },
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Colors.grey),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          side: BorderSide(color: isSelected ? Colors.blue : Colors.grey),
+          backgroundColor: isSelected ? Colors.blue.withOpacity(0.2) : Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.symmetric(vertical: 10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 18),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.white, size: 18),
             const SizedBox(width: 5),
             Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: isSelected ? Colors.blue : Colors.white, fontSize: 14),
             ),
           ],
         ),
@@ -247,8 +264,16 @@ class OnRideScreen extends StatelessWidget {
   }
 }
 
-class SearchResultsPage extends StatelessWidget {
+// ===================== SearchResultsPage =====================
+class SearchResultsPage extends StatefulWidget {
   const SearchResultsPage({super.key});
+
+  @override
+  State<SearchResultsPage> createState() => _SearchResultsPageState();
+}
+
+class _SearchResultsPageState extends State<SearchResultsPage> {
+  String selectedOption = '';
 
   @override
   Widget build(BuildContext context) {
@@ -266,19 +291,18 @@ class SearchResultsPage extends StatelessWidget {
                   color: const Color(0xFF2A2F32),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: const Row(
                   children: [
                     Icon(Icons.search, color: Colors.grey, size: 20),
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
+                      style: TextStyle(color: Colors.white),
                         autofocus: true,
                         decoration: InputDecoration(
                           hintText: 'Search by address',
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 14),
+                          hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
                           border: InputBorder.none,
                         ),
                       ),
@@ -311,8 +335,7 @@ class SearchResultsPage extends StatelessWidget {
                 child: _buildFeatureTile(
                   icon: Icons.sim_card_alert,
                   title: 'Import excel',
-                  description:
-                      'Import your stops as a convenient\nexcel or csv sheet',
+                  description: 'Import your stops as a convenient\nexcel or csv sheet',
                   imagePath: 'images/sim.png',
                 ),
               ),
@@ -323,15 +346,13 @@ class SearchResultsPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const FilePickerUIPage()),
+                    MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
                   );
                 },
                 child: _buildFeatureTile(
                   icon: Icons.image,
                   title: 'Image upload',
-                  description:
-                      'Upload your stops as an image or\ncapture it as a photo',
+                  description: 'Upload your stops as an image or\ncapture it as a photo',
                   imagePath: 'images/pic.png',
                 ),
               ),
@@ -342,8 +363,7 @@ class SearchResultsPage extends StatelessWidget {
                 onTap: () async {
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const BarcodeScannerPage()),
+                    MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
                   );
                   if (result != null) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -354,8 +374,7 @@ class SearchResultsPage extends StatelessWidget {
                 child: _buildFeatureTile(
                   icon: Icons.qr_code_scanner,
                   title: 'Scan Barcode',
-                  description:
-                      'Add stops by simply scanning the\nbarcode of your stops',
+                  description: 'Add stops by simply scanning the\nbarcode of your stops',
                   imagePath: 'images/barcode.png',
                 ),
               ),
@@ -372,14 +391,13 @@ class SearchResultsPage extends StatelessWidget {
                 child: SizedBox(
                   width: 200,
                   child: OutlinedButton(
-                    onPressed: _launchYouTube, // ✅ Opens YouTube
+                    onPressed: _launchYouTube,
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -401,54 +419,48 @@ class SearchResultsPage extends StatelessWidget {
               Row(
                 children: [
                   Padding(
-  padding: const EdgeInsets.only(bottom: 16.0),
-  child: Row(
-    children: [
-      // ✅ SIM card icon — now clickable
-      GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ImportPage()),
-          );
-        },
-        child: const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
-      ),
-      const SizedBox(width: 15),
-
-      // 🖼️ Photo icon — you can make it clickable too if you want
-      GestureDetector(
-        onTap: () {
-          // Example: Navigate to image upload page
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
-          );
-        },
-        child: const Icon(Icons.photo, color: Colors.blue, size: 30),
-      ),
-      const SizedBox(width: 15),
-
-      // 🔳 QR Code icon — also can be made clickable
-      GestureDetector(
-        onTap: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
-          );
-          if (result != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Scanned: $result')),
-            );
-          }
-        },
-        child:
-            const Icon(Icons.qr_code_scanner_sharp, color: Colors.blue, size: 30),
-      ),
-    ],
-  ),
-),
-
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ImportPage()),
+                            );
+                          },
+                          child:
+                              const Icon(Icons.sim_card_alert, color: Colors.blue, size: 30),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const FilePickerUIPage()),
+                            );
+                          },
+                          child: const Icon(Icons.photo, color: Colors.blue, size: 30),
+                        ),
+                        const SizedBox(width: 15),
+                        GestureDetector(
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const BarcodeScannerPage()),
+                            );
+                            if (result != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Scanned: $result')),
+                              );
+                            }
+                          },
+                          child: const Icon(Icons.qr_code_scanner_sharp,
+                              color: Colors.blue, size: 30),
+                        ),
+                      ],
+                    ),
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () {},
@@ -456,8 +468,8 @@ class SearchResultsPage extends StatelessWidget {
                       backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     ),
                     child: const Text(
                       'Done adding stops',
@@ -474,25 +486,46 @@ class SearchResultsPage extends StatelessWidget {
     );
   }
 
+  // ===================== Option Button with Blue Highlight =====================
   Widget _buildOption(BuildContext context, IconData icon, String text) {
+    final bool isSelected = selectedOption == text;
+
     return Expanded(
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: () async {
+          setState(() {
+            selectedOption = text; // Mark as selected
+          });
+
+          if (text.toLowerCase() == 'on map') {
+            final Uri googleMapsUri = Uri.parse('https://www.google.com/maps/dir/?api=1');
+            try {
+              if (!await launchUrl(
+                  googleMapsUri, mode: LaunchMode.externalApplication)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not open Google Maps')));
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Error: $e')));
+            }
+          }
+        },
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Colors.grey),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          side: BorderSide(color: isSelected ? Colors.blue : Colors.grey),
+          backgroundColor: isSelected ? Colors.blue.withOpacity(0.2) : Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.symmetric(vertical: 10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 18),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.white, size: 18),
             const SizedBox(width: 5),
             Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: isSelected ? Colors.blue : Colors.white, fontSize: 14),
             ),
           ],
         ),
@@ -500,6 +533,7 @@ class SearchResultsPage extends StatelessWidget {
     );
   }
 
+  // ===================== Feature Tile =====================
   Widget _buildFeatureTile({
     required IconData icon,
     required String title,

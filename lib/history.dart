@@ -64,7 +64,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               child: child,
                             );
                           },
-                          transitionDuration: const Duration(milliseconds: 300),
+                          transitionDuration: const Duration(milliseconds: 10),
                         ),
                       );
                     },
@@ -82,43 +82,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                   const SizedBox(width: 10),
                   GestureDetector(
-                    onTap: () async {
-                      final selected = await showMenu<String>(
-                        context: context,
-                        position: const RelativeRect.fromLTRB(250, 150, 20, 0),
-                        items: [
-                          const PopupMenuItem(
-                              value: 'Trips', child: Text('Trips')),
-                          const PopupMenuItem(
-                              value: 'Payments', child: Text('Payments')),
-                          const PopupMenuItem(
-                              value: 'Coupons', child: Text('Coupons')),
-                        ],
-                      );
-                      if (selected != null) {
-                        setState(() {
-                          _selectedOption = selected;
-                        });
-                      }
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 130,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Text(_selectedOption,
-                              style: const TextStyle(color: Colors.white)),
-                          const Spacer(),
-                          const Icon(Icons.arrow_drop_down, color: Colors.white),
-                        ],
-                      ),
+                  onTap: () async {
+                    final selected = await showMenu<String>(
+                      context: context,
+                      // 👇 Increased the top offset from 150 → 200 (you can tweak this)
+                      position: const RelativeRect.fromLTRB(250, 230, 30, 0),
+                      items: [
+                        const PopupMenuItem(value: 'Trips', child: Text('Trips')),
+                        const PopupMenuItem(value: 'Payments', child: Text('Payments')),
+                        const PopupMenuItem(value: 'Coupons', child: Text('Coupons')),
+                      ],
+                    );
+                    if (selected != null) {
+                      setState(() {
+                        _selectedOption = selected;
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 130,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(_selectedOption, style: const TextStyle(color: Colors.white)),
+                        const Spacer(),
+                        const Icon(Icons.arrow_drop_down, color: Colors.white),
+                      ],
                     ),
                   ),
+                )
+
                 ],
               ),
             ),
