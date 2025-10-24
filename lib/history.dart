@@ -11,6 +11,9 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   String _selectedOption = 'Trips'; // Default option
 
+  
+  final TextEditingController _searchController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -19,27 +22,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
         color: const Color(0xFF1C2526),
         child: Column(
           children: [
+
             Container(
               color: const Color(0xFF2A2F32),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
                   Expanded(
-                    child: const TextField(
-                      style: TextStyle(color: Colors.white),
+                    child: TextField(
+                      controller: _searchController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        icon: Icon(Icons.search, color: Colors.white38),
+                        icon: const Icon(Icons.search, color: Colors.white38),
                         hintText: 'Search Route by name, stops and more...',
-                        hintStyle: TextStyle(color: Colors.white38),
-                        suffixIcon: Icon(Icons.clear, color: Colors.white38),
+                        hintStyle: const TextStyle(color: Colors.white38),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.white38),
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                        ),
                         border: InputBorder.none,
                       ),
                     ),
                   ),
-                  
                 ],
               ),
             ),
+
             const SizedBox(height: 8),
             Container(
               color: const Color(0xFF2A2F32),

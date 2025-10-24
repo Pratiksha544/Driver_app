@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'manage.dart';
+import 'editpage.dart'; // Import your EditProfileScreen here
 
 class MyProfileScreen extends StatefulWidget {
   final User? user; // Make it nullable
-  
+
   const MyProfileScreen({super.key, this.user});
 
   @override
@@ -41,14 +43,12 @@ class _MyProfileScreenState extends State<MyProfileScreen>
   }
 
   Future<void> _loadUserData() async {
-    // Use constructor parameter first, then fallback to Firebase
     User? user = widget.user ?? FirebaseAuth.instance.currentUser;
     
     if (user != null && mounted) {
       setState(() {
         _currentUser = user;
         _email = user.email ?? 'No email';
-        // Extract only the first name from displayName or email's local part
         _displayName = user.displayName?.split(' ').firstWhere((part) => part.isNotEmpty, orElse: () => 'User') ??
                       (user.email?.split('@')[0].split(' ').firstWhere((part) => part.isNotEmpty, orElse: () => 'User') ?? 'User');
         _photoUrl = user.photoURL ?? '';
@@ -71,7 +71,7 @@ class _MyProfileScreenState extends State<MyProfileScreen>
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Logged out successfully')),
+          const SnackBar(content: Text('Logged out successfully'),duration: Duration(milliseconds: 300),),
         );
       }
     } catch (e) {
@@ -100,12 +100,11 @@ class _MyProfileScreenState extends State<MyProfileScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // User profile picture, name, and email in a structured row
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 30, // Increased for visibility
+                        radius: 30,
                         backgroundImage: _photoUrl.isNotEmpty
                             ? NetworkImage(_photoUrl)
                             : null,
@@ -113,7 +112,7 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                             ? const Icon(Icons.person, size: 40, color: Colors.white)
                             : null,
                       ),
-                      const SizedBox(width: 20), // Increased spacing
+                      const SizedBox(width: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -123,7 +122,7 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                                 'Hello, ',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18, // Increased font size
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -131,18 +130,17 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                                 _displayName,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18, // Increased font size
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                overflow: TextOverflow.ellipsis, // Prevent overflow errors
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8), // Increased spacing
-                          // Make email scrollable horizontally if it exceeds 20 characters
+                          const SizedBox(height: 8),
                           SizedBox(
-                            height: 20, // Fixed height to contain the scroll
-                            width: 200, // Set a reasonable width
+                            height: 20,
+                            width: 200,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(
@@ -159,35 +157,38 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                       ),
                       Spacer(),
                       Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CircleAvatar(
-                        radius: 18, // Adjusted size to ensure fit
-                        backgroundColor: Colors.white.withOpacity(0.2),
-                        child: IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.white, size: 18), // Adjusted size
-                          onPressed: _editProfile,
-                        ),
-                      ),
-                      const SizedBox(width: 10), // Adjusted spacing
-                      CircleAvatar(
-                        radius: 18, // Adjusted size to ensure fit
-                        backgroundColor: Colors.white.withOpacity(0.2),
-                        child: const Icon(Icons.notifications, color: Colors.white, size: 18), // Adjusted size
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Edit icon now navigates to EditProfileScreen
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.white.withOpacity(0.2),
+                              child: const Icon(Icons.edit, color: Colors.white, size: 18),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            child: const Icon(Icons.notifications, color: Colors.white, size: 18),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                    ],
-                  ),
-                  const SizedBox(height: 20), // Increased spacing
-                  // Action icons row
-                 // Increased spacing
-                  // What's new card
+                  const SizedBox(height: 20),
                   Container(
-                    height: 70, // Increased height
+                    height: 70,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15), // Slightly larger radius
+                      borderRadius: BorderRadius.circular(15),
                       color: const Color.fromARGB(255, 23, 120, 199),
                     ),
                     child: const Padding(
@@ -205,12 +206,12 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
-                                        fontSize: 16)), // Increased font size
+                                        fontSize: 16)),
                                 Text(
                                     "Introducing buffer time...",
                                     style: TextStyle(
                                         color: Color.fromARGB(255, 116, 183, 238),
-                                        fontSize: 14), // Increased font size
+                                        fontSize: 14),
                                     overflow: TextOverflow.ellipsis),
                               ],
                             ),
@@ -230,7 +231,6 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 15),
-                      // Stats row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -240,7 +240,6 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                         ],
                       ),
                       const SizedBox(height: 20),
-                      // Single Premium Upgrade Card
                       Container(
                         height: 65,
                         width: double.infinity,
@@ -267,22 +266,28 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                                 ],
                               ),
                               TextButton(
-                                onPressed: () {},
-                                child: const Text('Manage',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue)),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const Manage()),
+                                  );
+                                },
+                                child: const Text(
+                                  'Manage',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(height: 15),
-                      // Grid items
                       _buildGridItems(),
                       const SizedBox(height: 15),
-                      // Logout button
                       Center(
                         child: ElevatedButton.icon(
                           onPressed: _currentUser != null ? _handleLogout : null,
@@ -300,7 +305,6 @@ class _MyProfileScreenState extends State<MyProfileScreen>
                         ),
                       ),
                       const SizedBox(height: 15),
-                      // Footer
                       const Center(
                           child: Text('App version 27.6',
                               style: TextStyle(color: Colors.blueGrey, fontSize: 12))),
@@ -398,25 +402,9 @@ class _MyProfileScreenState extends State<MyProfileScreen>
     );
   }
 
-  void _editProfile() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit Profile'),
-        content: const Text('Profile editing functionality coming soon!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _handleGridItemTap(String item) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$item tapped')),
+      SnackBar(content: Text('$item tapped'),duration: Duration(milliseconds: 300),),
     );
   }
 
